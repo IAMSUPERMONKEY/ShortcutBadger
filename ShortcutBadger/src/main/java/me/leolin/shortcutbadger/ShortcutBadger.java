@@ -40,12 +40,38 @@ public final class ShortcutBadger {
     private static final String LOG_TAG = "ShortcutBadger";
     private static final int SUPPORTED_CHECK_ATTEMPTS = 3;
 
-    private static final List<Class<? extends Badger>> BADGERS = new LinkedList<Class<? extends Badger>>();
+    private static final List<Class<? extends Badger>> BADGERS = new LinkedList<>();
 
     private volatile static Boolean sIsBadgeCounterSupported;
     private final static Object sCounterSupportedLock = new Object();
 
-    static {
+//    static {
+//        BADGERS.add(AdwHomeBadger.class);
+//        BADGERS.add(ApexHomeBadger.class);
+//        BADGERS.add(DefaultBadger.class);
+//        BADGERS.add(NewHtcHomeBadger.class);
+//        BADGERS.add(NovaHomeBadger.class);
+//        BADGERS.add(SonyHomeBadger.class);
+//        BADGERS.add(AsusHomeBadger.class);
+//        BADGERS.add(HuaweiHomeBadger.class);
+//        BADGERS.add(OPPOHomeBader.class);
+//        BADGERS.add(SamsungHomeBadger.class);
+//        BADGERS.add(ZukHomeBadger.class);
+//        BADGERS.add(VivoHomeBadger.class);
+//        BADGERS.add(ZTEHomeBadger.class);
+//        BADGERS.add(EverythingMeHomeBadger.class);
+//        BADGERS.add(YandexLauncherBadger.class);
+//    }
+
+    private static Badger sShortcutBadger;
+    private static ComponentName sComponentName;
+    private static Context context;
+    private static int badgeCount;
+
+    /**
+     * init Config
+     */
+    public static void initConfig() {
         BADGERS.add(AdwHomeBadger.class);
         BADGERS.add(ApexHomeBadger.class);
         BADGERS.add(DefaultBadger.class);
@@ -62,9 +88,6 @@ public final class ShortcutBadger {
         BADGERS.add(EverythingMeHomeBadger.class);
         BADGERS.add(YandexLauncherBadger.class);
     }
-
-    private static Badger sShortcutBadger;
-    private static ComponentName sComponentName;
 
     /**
      * Tries to update the notification count
@@ -129,6 +152,8 @@ public final class ShortcutBadger {
      * Whether this platform launcher supports shortcut badges. Doing this check causes the side
      * effect of resetting the counter if it's supported, so this method should be followed by
      * a call that actually sets the counter to the desired value, if the counter is supported.
+     * @param context Caller context
+     * @return true in case of success, false otherwise
      */
     public static boolean isBadgeCounterSupported(Context context) {
         // Checking outside synchronized block to avoid synchronization in the common case (flag
@@ -170,9 +195,9 @@ public final class ShortcutBadger {
     }
 
     /**
-     * @param context      Caller context
-     * @param notification
-     * @param badgeCount
+     * @param context       Caller context
+     * @param notification  notification
+     * @param badgeCount    badgeCount
      */
     public static void applyNotification(Context context, Notification notification, int badgeCount) {
         if (Build.MANUFACTURER.equalsIgnoreCase("Xiaomi")) {
